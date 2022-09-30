@@ -1,0 +1,18 @@
+.filter {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.input {
+    height: 30px;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 20px;
+}
+.label {
+margin-left: 15px;
+margin-right: 5px;
+font-size: 30px;
+font-weight: 600;
+}

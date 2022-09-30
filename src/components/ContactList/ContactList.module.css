@@ -1,0 +1,26 @@
+.contactList {
+    margin-top: 60px;
+}
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 30px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    background-color: #F4F4F4;
+}
+.delBtn {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    transition: color 250ms linear scale 250ms linear;
+}
+.delBtn:hover {
+    color: #E72323;
+    scale: 1.2;
+}

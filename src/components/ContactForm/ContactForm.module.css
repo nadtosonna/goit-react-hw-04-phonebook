@@ -1,0 +1,44 @@
+.form {
+    margin-top: 50px;
+    margin-bottom: 30px;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F4F4F4;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    box-shadow: 5px 5px 10px #000000;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: left;
+}
+.nameBlock, .numberBlock {
+    margin-right: 20px;
+}
+.input {
+    height: 30px;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 20px;
+}
+.label {
+    font-size: 30px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+.addBtn {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+        
+    transition: color 250ms linear scale 250ms linear;
+}
+.addBtn:hover {
+    color: #26D518;
+    scale: 1.5;
+}
