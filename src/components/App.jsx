@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { ContactForm } from "./ContactForm/ContactForm";
 import { ContactList } from "./ContactList/ContactList";
@@ -7,72 +7,48 @@ import { SearchFilter } from "./SearchFilter/SearchFilter";
 import { Section } from './Section/Section';
 import css from './App.module.css';
 
-export class App extends Component {
-  state = {
-    contacts: [],
-    filter: '',
-  };
+export function App() {
+  const [contacts, setContacts] = useState(() => {
+    const value = JSON.parse(localStorage.getItem('contacts'));
+    return value ?? [];
+  })
+  const [filter, setFilter] = useState('');
 
-  componentDidMount() {
-    const contacts = JSON.parse(localStorage.getItem('contacts'));
-    if (contacts?.length) {
-      this.setState({
-        contacts,
-      })
-    }
-  }
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.state === nextState) {
-      return false;
-    }
-    return true;
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const { contacts } = this.state;
-    if (prevState.contacts !== contacts) {
-      localStorage.setItem('contacts', JSON.stringify(contacts));
-    }
-  }
-
-  addContact = contact => {
-    if (this.isExisting(contact)) {
-      Notify.failure('This contact is already existing in the phonebook!', {
+  const addContact = (contact) => {
+    if (isExisting(contact)) {
+        Notify.failure('This contact is already existing in the phonebook!', {
         position: 'center-top',
         width: '380px',
       });
       return;
     }
-    this.setState(prevState => {
+    setContacts((prev) => {
       const newContact = {
         id: nanoid(),
         ...contact,
       }
-      return {
-        contacts: [...prevState.contacts, newContact],
-      };
-    });
+      return [...prev, newContact];
+    })
   }
 
-  deleteContact = id => {
-    this.setState(prevState => {
-      const newContacts = prevState.contacts.filter(contact => contact.id !== id);
-      return {
-        contacts: newContacts
-      };
-    });
+  const deleteContact = (id) => {
+    setContacts((prev) => {
+      const newContacts = prev.filter(contact => contact.id !== id);
+      return newContacts;
+    })
   }
 
-  isExisting({ name, number }) {
-    const { contacts } = this.state;
+  const isExisting = ({ name, number }) => {
     const check = contacts
       .find(contact => contact.name.toLowerCase() === name.toLowerCase() || contact.number === number);
     return check;
   }
 
-  filterContacts() {
-    const { contacts, filter } = this.state;
+  const filterContacts = () => {
     if (!filter) {
       return contacts;
     }
@@ -80,29 +56,26 @@ export class App extends Component {
     return contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
   }
 
-  handleSearchFilter = event => {
-    this.setState({
-      filter: event.currentTarget.value,
-    });
-}
+  const handleSearchFilter = (event) => {
+    const { value } = event.target;
+    setFilter(value);
+  }
 
-  render() {
-    return (
+  return (
       <div className={css.container}>
         <Section title="Phonebook">
-           <ContactForm onSubmit={this.addContact} />
+           <ContactForm onSubmit={addContact} />
         </Section>
         <Section title="Contacts">
           <SearchFilter
-          filter={this.state.filter}
-          handleSearchFilter={this.handleSearchFilter} />
-        {this.state.contacts.length > 0 ? (
+          filter={filter}
+          handleSearchFilter={handleSearchFilter} />
+        {contacts.length > 0 ? (
           <ContactList
-          contacts={this.filterContacts()}
-          deleteContact={this.deleteContact} />
+          contacts={filterContacts()}
+          deleteContact={deleteContact} />
         ) : <p className={css.emptyList}>Your Contact List is empty.</p>}
         </Section>
       </div>
     );
-  }
 }
